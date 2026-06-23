@@ -11,7 +11,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 
 
-df=pd.read_csv('diabetes_prediction_dataset.csv')
+df=pd.read_csv('diabetes_prediction_dataset.csv')# Data loading 
 print(df)
 
 # Missing values
@@ -70,6 +70,7 @@ df['smoking_history']=le.fit_transform(df['smoking_history'])
 X=df.drop('diabetes', axis=1)
 y=df['diabetes']
 
+# Spliting x & y 
 
 X_train,X_test,y_train,y_test=train_test_split(X,y, test_size=0.2 , random_state= 42)
 
