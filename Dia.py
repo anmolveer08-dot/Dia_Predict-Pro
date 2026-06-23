@@ -61,11 +61,14 @@ sns.heatmap(df.corr(numeric_only=True),
 plt.show()
 
 #liner regression 
-gender_encoder = LabelEncoder()
-smoking_encoder = LabelEncoder()
 
-df['gender'] = gender_encoder.fit_transform(df['gender'])
-df['smoking_history'] = smoking_encoder.fit_transform(df['smoking_history'])
+# Encoding
+df = pd.get_dummies(
+    df,
+    columns=['gender', 'smoking_history'],
+    drop_first=True,
+    dtype=int
+)
 
 X=df.drop('diabetes', axis=1)
 y=df['diabetes']
@@ -97,12 +100,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
 
 #encding 
-
-le=LabelEncoder()
-
-df['gender']= le.fit_transform(df['gender'])
-df['smoking_history']=le.fit_transform(df['smoking_history'])
-
+# Encoding
 
 X=df.drop('diabetes', axis=1)
 y=df['diabetes']
@@ -149,24 +147,31 @@ plt.show()
 
 #=========== decision tree =============
 
+import numpy as py
+import pandas as pd
+import seaborn as sns 
+import matplotlib.pyplot as plt
+import pickle
+
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.tree import plot_tree
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-#Encoding
-le = LabelEncoder()
+# Encoding
 
-df['gender'] = le.fit_transform(df['gender'])
-df['smoking_history'] = le.fit_transform(df['smoking_history'])
 
-x=df.drop('diabetes', axis=1)
+# Features and target
+X = df.drop('diabetes', axis=1)
 y = df['diabetes']
 
-#Traning and testing of model
-X_train,X_test,y_train,y_test=train_test_split(X,y, test_size=0.2 ,random_state=42)
+print(X.columns.tolist())
 
+# Train test split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
 
 model = DecisionTreeClassifier(     #== without tuning 97% == without 94%==in classifeir mode 
     
@@ -186,6 +191,9 @@ print(classification_report(y_test, y_pred))
 
 
 # confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+print(cm)
+
 sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
 plt.xlabel("Predicted")
 plt.ylabel("Actual")
@@ -220,6 +228,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.tree import plot_tree
+
 
 x=df.drop('diabetes', axis=1)
 y = df['diabetes']
@@ -304,6 +313,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report,confusion_matrix
+
 
 
 X = df.drop('diabetes', axis=1)
@@ -400,6 +410,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 
+
 X = df.drop('diabetes', axis=1)
 y = df['diabetes']
 
@@ -435,14 +446,5 @@ plt.ylabel("Actual")
 plt.title("KNN Confusion Matrix")
 plt.show()
 
-import pickle
-
-# Save Model
-with open("diabetes_model.pkl", "wb") as file:
-    pickle.dump(model, file)
-
-
-pickle.dump(gender_encoder, open("gender_encoder.pkl", "wb"))
-pickle.dump(smoking_encoder, open("smoking_encoder.pkl", "wb"))
-
-pickle.dump(scaler, open("scaler.pkl", "wb"))
+pickle.dump(model, open("diabetes_model.pkl", "wb"))
+pickle.dump(X.columns.tolist(), open("features.pkl", "wb"))
