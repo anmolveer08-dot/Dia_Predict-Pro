@@ -1,8 +1,12 @@
 import pickle
+model = pickle.load(open("diabetes_model.pkl", "rb"))
 
+gender_encoder = pickle.load(open("gender_encoder.pkl", "rb"))
+
+smoking_encoder = pickle.load(open("smoking_encoder.pkl", "rb"))
+
+scaler = pickle.load(open("scaler.pkl", "rb"))  # only if KNN
 # Load Model
-with open("diabetes_model.pkl", "rb") as file:
-    model = pickle.load(file)
 
 # Load Encoder
 with open("label_encoder.pkl", "rb") as file:
@@ -144,11 +148,23 @@ st.divider()
 
 if st.button("🔍 Predict Diabetes Risk", use_container_width=True):
 
-    # your prediction code here
+    gender_encoded = gender_encoder.transform([gender])[0]
+    smoking_encoded = smoking_encoder.transform([smoking_history])[0]
 
-    prediction = 1
+    data = [[
+        gender_encoded,
+        age,
+        hypertension,
+        heart_disease,
+        smoking_encoded,
+        bmi,
+        hba1c,
+        blood_glucose
+    ]]
+
+    prediction = model.predict(data)[0]
 
     if prediction == 1:
         st.error("🔴 High Risk of Diabetes")
     else:
-        st.success("🟢 Low Risk of Diabetes")   
+        st.success("🟢 Low Risk of Diabetes")

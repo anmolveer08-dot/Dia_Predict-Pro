@@ -2,7 +2,7 @@ import numpy as py
 import pandas as pd
 import seaborn as sns 
 import matplotlib.pyplot as plt
-
+import pickle
 
 
 from sklearn.linear_model import LinearRegression
@@ -61,11 +61,11 @@ sns.heatmap(df.corr(numeric_only=True),
 plt.show()
 
 #liner regression 
-le=LabelEncoder()
+gender_encoder = LabelEncoder()
+smoking_encoder = LabelEncoder()
 
-df['gender']= le.fit_transform(df['gender'])
-df['smoking_history']=le.fit_transform(df['smoking_history'])
-
+df['gender'] = gender_encoder.fit_transform(df['gender'])
+df['smoking_history'] = smoking_encoder.fit_transform(df['smoking_history'])
 
 X=df.drop('diabetes', axis=1)
 y=df['diabetes']
@@ -441,8 +441,8 @@ import pickle
 with open("diabetes_model.pkl", "wb") as file:
     pickle.dump(model, file)
 
-# Save Label Encoder
-with open("label_encoder.pkl", "wb") as file:
-    pickle.dump(le, file)
 
-print("Model and Encoder saved successfully!")
+pickle.dump(gender_encoder, open("gender_encoder.pkl", "wb"))
+pickle.dump(smoking_encoder, open("smoking_encoder.pkl", "wb"))
+
+pickle.dump(scaler, open("scaler.pkl", "wb"))
