@@ -1,204 +1,214 @@
 import streamlit as st
-import joblib
 import numpy as np
+import joblib
 import base64
-from tensorflow.keras.models import load_model
 
-# ---------------- PAGE CONFIG ----------------
+# ==========================
+# PAGE CONFIG
+# ==========================
 st.set_page_config(
-    page_title="DIA-PREDICT-PRO",
+    page_title="Diabetes Prediction System",
     page_icon="🩺",
     layout="wide"
 )
 
-# ---------------- BACKGROUND ----------------
-def add_bg(image_file):
-    with open(image_file, "rb") as f:
-        data = f.read()
+# ==========================
+# LOAD MODEL
+# ==========================
+model = joblib.load("random_forest.pkl")
 
-    encoded = base64.b64encode(data).decode()
+# ==========================
+# BACKGROUND IMAGE
+# ==========================
+def get_base64(file):
+    with open(file, "rb") as f:
+        return base64.b64encode(f.read()).decode()
 
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background-image: url("data:image/jpg;base64,{encoded}");
-            background-size: cover;
-            background-position: center;
-        }}
+bg = get_base64("C:/Users/asus/OneDrive/Documents/GitHub/Dia_Predict-Pro/bg.jpg")
 
-        .main {{
-            background: rgba(255,255,255,0.85);
-            border-radius: 15px;
-            padding: 20px;
-        }}
+st.markdown(f"""
+<style>
 
-        h1 {{
-            text-align:center;
-            color:#003366;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+.stApp {{
+    background-image: url("data:image/jpg;base64,{bg}");
+    background-size: cover;
+    background-position: center;
+}}
 
-add_bg("bg.jpg")
+.main {{
+    background: rgba(0,0,0,0.45);
+    padding: 20px;
+    border-radius: 20px;
+}}
 
-# ---------------- LOAD MODELS ----------------
-lr_model = joblib.load("logistic.pkl")
-dt_model = joblib.load("decision_tree.pkl")
-rf_model = joblib.load("random_forest.pkl")
-knn_model = joblib.load("knn.pkl")
+.title {{
+    text-align:center;
+    font-size:40px;
+    font-weight:bold;
+    color:white;
+}}
 
-ann_model = load_model("ann_model.h5")
+.acc {{
+    text-align:center;
+    font-size:18px;
+    color:#00ff88;
+}}
 
-scaler = joblib.load("scaler.pkl")
+</style>
+""", unsafe_allow_html=True)
 
-# ---------------- ACCURACY VALUES ----------------
-accuracies = {
-    "Logistic Regression": 86.5,
-    "Decision Tree": 84.2,
-    "Random Forest": 89.7,
-    "KNN": 87.1,
-    "ANN": 91.2
-}
-
-# ---------------- TITLE ----------------
+# ==========================
+# TITLE
+# ==========================
 st.markdown(
-    """
-    <h1>🩺 DIA-PREDICT-PRO</h1>
-    <h4 style='text-align:center;color:#444'>
-    Smart Diabetes Prediction System
-    </h4>
-    """,
+    '<p class="title">🩺 Smart Diabetes Prediction System</p>',
     unsafe_allow_html=True
 )
 
-# ---------------- INPUTS ----------------
+st.markdown(
+    '<p class="acc">Random Forest Accuracy : 91.2%</p>',
+    unsafe_allow_html=True
+)
+
+st.divider()
+
+# ==========================
+# INPUTS
+# ==========================
 col1, col2 = st.columns(2)
 
 with col1:
 
-    st.subheader("Patient Information")
-
-    age = st.number_input("Age", 1, 120)
+    age = st.number_input("Age", 1, 120, 25)
 
     gender = st.selectbox(
         "Gender",
         ["Female", "Male"]
     )
 
-    bmi = st.number_input(
-        "BMI",
-        min_value=10.0,
-        max_value=60.0
+    smoking_status = st.selectbox(
+        "Smoking Status",
+        ["never", "former", "current"]
     )
 
-    hba1c = st.number_input(
-        "HbA1c Level",
-        min_value=1.0,
-        max_value=15.0
+    bmi = st.number_input("BMI", value=25.0)
+
+    hba1c = st.number_input("HbA1c", value=5.5)
+
+    insulin_level = st.number_input(
+        "Insulin Level",
+        value=15.0
+    )
+
+    heart_rate = st.number_input(
+        "Heart Rate",
+        value=72
+    )
+
+    cholesterol_total = st.number_input(
+        "Cholesterol Total",
+        value=180.0
+    )
+
+    diabetes_risk_score = st.number_input(
+        "Diabetes Risk Score",
+        value=50.0
     )
 
 with col2:
 
-    blood_glucose = st.number_input(
-        "Blood Glucose Level",
-        min_value=50,
-        max_value=400
+    alcohol_consumption_per_week = st.number_input(
+        "Alcohol Consumption Per Week",
+        value=0.0
     )
 
-    hypertension = st.selectbox(
-        "Hypertension",
-        [0,1]
+    physical_activity_minutes_per_week = st.number_input(
+        "Physical Activity Minutes Per Week",
+        value=150
     )
 
-    heart_disease = st.selectbox(
-        "Heart Disease",
-        [0,1]
+    diet_score = st.number_input(
+        "Diet Score",
+        value=5.0
     )
 
-    smoking_status = st.selectbox(
-        "Smoking Status",
-        [
-            "never",
-            "former",
-            "current",
-            "not current",
-            "ever"
-        ]
+    sleep_hours_per_day = st.number_input(
+        "Sleep Hours Per Day",
+        value=8.0
     )
 
-# ---------------- MODEL SELECTION ----------------
-st.subheader("Choose Prediction Model")
+    family_history_diabetes = st.selectbox(
+        "Family History Diabetes",
+        [0, 1]
+    )
 
-selected_model = st.selectbox(
-    "Select Model",
-    [
-        "Logistic Regression",
-        "Decision Tree",
-        "Random Forest",
-        "KNN",
-        "ANN"
-    ]
-)
+    hypertension_history = st.selectbox(
+        "Hypertension History",
+        [0, 1]
+    )
 
-# ---------------- ENCODING ----------------
+    cardiovascular_history = st.selectbox(
+        "Cardiovascular History",
+        [0, 1]
+    )
+
+    diastolic_bp = st.number_input(
+        "Diastolic BP",
+        value=80.0
+    )
+
+    glucose_fasting = st.number_input(
+        "Glucose Fasting",
+        value=90.0
+    )
+
+# ==========================
+# ENCODING
+# ==========================
 gender = 1 if gender == "Male" else 0
 
 smoking_dict = {
-    "never":0,
-    "former":1,
-    "current":2,
-    "not current":3,
-    "ever":4
+    "never": 0,
+    "former": 1,
+    "current": 2
 }
 
 smoking_status = smoking_dict[smoking_status]
 
-# ---------------- PREDICT ----------------
-if st.button("🔍 Predict Diabetes Risk"):
+# ==========================
+# PREDICTION
+# ==========================
+if st.button(
+    "🔍 Predict Diabetes Risk",
+    use_container_width=True
+):
 
-    data = np.array([[
-        gender,
+    features = np.array([[
         age,
-        hypertension,
-        heart_disease,
+        gender,
         smoking_status,
+        alcohol_consumption_per_week,
+        physical_activity_minutes_per_week,
+        diet_score,
+        sleep_hours_per_day,
+        family_history_diabetes,
+        hypertension_history,
+        cardiovascular_history,
         bmi,
+        diastolic_bp,
+        heart_rate,
+        cholesterol_total,
+        glucose_fasting,
+        insulin_level,
         hba1c,
-        blood_glucose
+        diabetes_risk_score
     ]])
 
-    data = scaler.transform(data)
+    prediction = model.predict(features)
 
-    if selected_model == "Logistic Regression":
-        prediction = lr_model.predict(data)
-
-    elif selected_model == "Decision Tree":
-        prediction = dt_model.predict(data)
-
-    elif selected_model == "Random Forest":
-        prediction = rf_model.predict(data)
-
-    elif selected_model == "KNN":
-        prediction = knn_model.predict(data)
-
-    else:
-        prediction = ann_model.predict(data)
-        prediction = (prediction > 0.5).astype(int)
-
-    st.divider()
-
-    st.subheader("Prediction Result")
+    st.write("")
 
     if prediction[0] == 1:
-        st.error("🔴 High Risk of Diabetes")
+        st.error("⚠ High Risk of Diabetes")
     else:
-        st.success("🟢 Low Risk of Diabetes")
-
-    st.info(f"Model Used: {selected_model}")
-
-    st.info(
-        f"Model Accuracy: {accuracies[selected_model]}%"
-    )
+        st.success("✅ Low Risk of Diabetes")

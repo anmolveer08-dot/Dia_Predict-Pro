@@ -20,6 +20,29 @@ print(df.head())
 print(df.info())
 print(df.describe())
 
+# data visulization
+
+sns.countplot(x='diagnosed_diabetes', data=df)
+plt.title('Diabetes Distribution')
+plt.show()
+
+plt.figure(figsize=(10,8))
+sns.heatmap(df.corr(numeric_only=True), annot=True, cmap='coolwarm')
+plt.title('Correlation Heatmap')
+plt.show()
+
+sns.boxplot(x='diagnosed_diabetes', y='Age', data=df)
+plt.title('Age vs Diabetes')
+plt.show()
+
+sns.boxplot(x='diagnosed_diabetes', y='hba1c', data=df)
+plt.title('HbA1c Level vs Diabetes')
+plt.show()
+
+df.hist(figsize=(12,10))
+plt.tight_layout()
+plt.show()
+
 
 #Encoding 
 
