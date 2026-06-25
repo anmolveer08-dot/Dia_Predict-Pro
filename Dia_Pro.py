@@ -3,11 +3,12 @@ import numpy as np
 import joblib
 import base64
 
+
 # ==========================
 # PAGE CONFIG
 # ==========================
 st.set_page_config(
-    page_title="Diabetes Prediction System",
+    page_title="Dia Predict Pro",
     page_icon="🩺",
     layout="wide"
 )
@@ -20,53 +21,87 @@ model = joblib.load("random_forest.pkl")
 # ==========================
 # BACKGROUND IMAGE
 # ==========================
-def get_base64(file):
-    with open(file, "rb") as f:
-        return base64.b64encode(f.read()).decode()
 
-bg = get_base64("C:/Users/asus/OneDrive/Documents/GitHub/Dia_Predict-Pro/bg.jpg")
+import base64
+import streamlit as st
 
-st.markdown(f"""
+def add_bg(image_file):
+    with open(image_file, "rb") as f:
+        encoded = base64.b64encode(f.read()).decode()
+
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/png;base64,{encoded}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+add_bg("imgback.jpg")   # change to your file name
+st.markdown("""
 <style>
 
-.stApp {{
-    background-image: url("data:image/jpg;base64,{bg}");
-    background-size: cover;
-    background-position: center;
-}}
-
-.main {{
-    background: rgba(0,0,0,0.45);
-    padding: 20px;
-    border-radius: 20px;
-}}
-
-.title {{
+/* Main Title */
+.main-title{
     text-align:center;
-    font-size:40px;
+    font-size:45px;
     font-weight:bold;
-    color:white;
-}}
+    color:#003366;
+    text-shadow:2px 2px 4px white;
+    margin-bottom:20px;
+}
 
-.acc {{
+/* Section Titles */
+.section-title{
+    text-align:left;
+    font-size:30px;
+    font-weight:bold;
+    color:#FFFFFF;
+    text-shadow:2px 2px 4px black;
+    margin-top:20px;
+}
+
+/* Labels */
+label{
+    color:##00FF7F !important;
+    font-size:18px !important;
+    font-weight:bold !important;
+}
+
+/* Accuracy Text */
+.accuracy{
     text-align:center;
-    font-size:18px;
-    color:#00ff88;
-}}
+    color:#00FF7F;
+    font-size:22px;
+    font-weight:bold;
+}
+
+/* Result Text */
+.result{
+    text-align:center;
+    font-size:28px;
+    font-weight:bold;
+}
 
 </style>
 """, unsafe_allow_html=True)
 
 # ==========================
-# TITLE
+# TITLE   '<p class="acc">Random Forest Accuracy : 91.2%</p>',
 # ==========================
 st.markdown(
-    '<p class="title">🩺 Smart Diabetes Prediction System</p>',
+    '<div class="main-title">🩺 Dia Predict Pro </div>',
     unsafe_allow_html=True
 )
-
 st.markdown(
-    '<p class="acc">Random Forest Accuracy : 91.2%</p>',
+    f'<div class="accuracy">{'Random Forest Accuracy'} Accuracy : {91.2:.2f}%</div>',
     unsafe_allow_html=True
 )
 
