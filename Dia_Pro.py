@@ -218,32 +218,24 @@ if st.button(
     use_container_width=True
 ):
 
-    features = np.array([[
-        age,
-        gender,
-        smoking_status,
-        alcohol_consumption_per_week,
-        physical_activity_minutes_per_week,
-        diet_score,
-        sleep_hours_per_day,
-        family_history_diabetes,
-        hypertension_history,
-        cardiovascular_history,
-        bmi,
-        diastolic_bp,
-        heart_rate,
-        cholesterol_total,
-        glucose_fasting,
-        insulin_level,
-        hba1c,
-        diabetes_risk_score
-    ]])
+   features = np.array([[
+    age,
+    smoking_status,
+    family_history_diabetes,
+    hypertension_history,
+    bmi,
+    glucose_fasting,
+    insulin_level,
+    hba1c
+]])
 
-    prediction = model.predict(features)
+prediction = model.predict(features)
 
-    st.write("")
+    # Debug output
+st.write("Prediction:", prediction)
+st.write("Features:", features)
 
-    if prediction[0] == 1:
+if prediction[0] == 1:
         st.error("⚠ High Risk of Diabetes")
-    else:
+else:
         st.success("✅ Low Risk of Diabetes")

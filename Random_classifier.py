@@ -13,11 +13,14 @@ from sklearn.metrics import classification_report,confusion_matrix,accuracy_scor
 df=pd.read_csv('Diabetes_and_LifeStyle_Dataset -selected-columns.csv')
 
 print(df)
+print(df['diagnosed_diabetes'].value_counts())
 print(df.shape)
 
 
 print(df.head())
 print(df.info())
+
+print(df['diagnosed_diabetes'].value_counts())
 print(df.describe())
 
 
