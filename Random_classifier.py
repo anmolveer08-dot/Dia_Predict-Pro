@@ -26,16 +26,22 @@ print(df.describe())
 
 # Encoding
 
-le = LabelEncoder()
-df['gender'] = le.fit_transform(df['gender'])
-df['smoking_status'] = le.fit_transform(df['smoking_status'])
+gender_encoder = LabelEncoder()
+smoking_encoder = LabelEncoder()
+
+df['gender'] = gender_encoder.fit_transform(df['gender'])
+df['smoking_status'] = smoking_encoder.fit_transform(df['smoking_status'])
+
+joblib.dump(gender_encoder, "gender_encoder.pkl")
+joblib.dump(smoking_encoder, "smoking_encoder.pkl")
+
 
 # Features and Target
 X = df.drop('diagnosed_diabetes', axis=1)
 y = df['diagnosed_diabetes']
 
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
+    X, y, test_size=0.2, random_state=42,stratify=y
 )
 
 model=RandomForestClassifier(
@@ -47,6 +53,15 @@ model=RandomForestClassifier(
 )
 model.fit(X_train,y_train)
 
+from sklearn.model_selection import StratifiedKFold, cross_val_score
+
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+
+scores = cross_val_score(model, X, y, cv=cv)
+
+print("Cross Validation Scores:", scores)
+print("Mean Accuracy:", scores.mean())
+
 joblib.dump(model, 'random_forest.pkl')
 
 y_pred=model.predict(X_test)
@@ -56,6 +71,9 @@ y_pred=model.predict(X_test)
 
 print("Acccuracy Train",model.score(X_train,y_train))
 print("Accuracy Test",model.score(X_test,y_test))
+
+
+
 
 #confusion matrix
 cm = confusion_matrix(y_test, y_pred)
