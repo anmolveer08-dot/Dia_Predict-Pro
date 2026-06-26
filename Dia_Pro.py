@@ -3,6 +3,11 @@ import numpy as np
 import joblib
 import base64
 
+import joblib
+
+model = joblib.load("random_forest.pkl")
+gender_encoder = joblib.load("gender_encoder.pkl")
+smoking_encoder = joblib.load("smoking_encoder.pkl")
 
 # ==========================
 # PAGE CONFIG
@@ -12,11 +17,6 @@ st.set_page_config(
     page_icon="🩺",
     layout="wide"
 )
-
-# ==========================
-# LOAD MODEL
-# ==========================
-model = joblib.load("random_forest.pkl")
 
 # ==========================
 # BACKGROUND IMAGE
@@ -116,15 +116,16 @@ with col1:
 
     age = st.number_input("Age", 1, 120, 25)
 
+  
     gender = st.selectbox(
-        "Gender",
-        ["Female", "Male"]
-    )
+    "Gender",
+    ["Female", "Male"]
+)
 
     smoking_status = st.selectbox(
-        "Smoking Status",
-        ["never", "former", "current"]
-    )
+    "Smoking Status",
+    ["Never", "Former", "Current"]
+)
 
     bmi = st.number_input("BMI", value=25.0)
 
@@ -200,15 +201,12 @@ with col2:
 # ==========================
 # ENCODING
 # ==========================
-gender = 1 if gender == "Male" else 0
+# ==========================
+# ENCODING
+# ==========================
 
-smoking_dict = {
-    "never": 0,
-    "former": 1,
-    "current": 2
-}
-
-smoking_status = smoking_dict[smoking_status]
+gender = gender_encoder.transform([gender])[0]
+smoking_status = smoking_encoder.transform([smoking_status])[0]
 # ==========================
 # PREDICTION
 # ==========================
