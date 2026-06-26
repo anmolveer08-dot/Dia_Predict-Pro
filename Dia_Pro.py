@@ -241,8 +241,7 @@ if st.button(
 
     prediction = model.predict(features)
 
-    st.write("")
-
+   
     if prediction[0] == 1:
         st.error("⚠ High Risk of Diabetes")
     else:
