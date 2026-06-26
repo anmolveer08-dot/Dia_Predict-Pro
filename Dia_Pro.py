@@ -3,8 +3,6 @@ import numpy as np
 import joblib
 import base64
 
-import joblib
-
 model = joblib.load("random_forest.pkl")
 gender_encoder = joblib.load("gender_encoder.pkl")
 smoking_encoder = joblib.load("smoking_encoder.pkl")
@@ -106,101 +104,74 @@ st.markdown(
 )
 
 st.divider()
-
 # ==========================
 # INPUTS
 # ==========================
-col1, col2 = st.columns(2)
 
-with col1:
-
-    age = st.number_input("Age", 1, 120, 25)
-
-  
-    gender = st.selectbox(
+age = st.number_input(
+    "Age",
+    min_value=1,
+    max_value=120,
+    value=25
+)
+gender = st.selectbox(
     "Gender",
     ["Female", "Male"]
 )
 
-    smoking_status = st.selectbox(
+smoking_status = st.selectbox(
     "Smoking Status",
     ["Never", "Former", "Current"]
 )
 
-    bmi = st.number_input("BMI", value=25.0)
+bmi = st.number_input(
+    "BMI",
+    value=25.0
+)
 
-    hba1c = st.number_input("HbA1c", value=5.5)
+physical_activity_minutes_per_week = st.number_input(
+    "Physical Activity Minutes Per Week",
+    value=150
+)
 
-    insulin_level = st.number_input(
-        "Insulin Level",
-        value=15.0
-    )
+family_history_diabetes = st.selectbox(
+    "Family History of Diabetes",
+    [0, 1],
+    format_func=lambda x: "Yes" if x == 1 else "No"
+)
 
-    heart_rate = st.number_input(
-        "Heart Rate",
-        value=72
-    )
+cholesterol_total = st.number_input(
+    "Total Cholesterol",
+    value=180.0
+)
 
-    cholesterol_total = st.number_input(
-        "Cholesterol Total",
-        value=180.0
-    )
+glucose_fasting = st.number_input(
+    "Fasting Glucose",
+    value=90.0
+)
 
-    diabetes_risk_score = st.number_input(
-        "Diabetes Risk Score",
-        value=50.0
-    )
+hba1c = st.number_input(
+    "HbA1c Level",
+    value=5.5
+)
 
-with col2:
+insulin_level = st.number_input(
+    "Insulin Level",
+    value=15.0
+)
 
-    alcohol_consumption_per_week = st.number_input(
-        "Alcohol Consumption Per Week",
-        value=0.0
-    )
+diabetes_risk_score = st.number_input(
+    "Diabetes Risk Score",
+    value=50.0
+)
 
-    physical_activity_minutes_per_week = st.number_input(
-        "Physical Activity Minutes Per Week",
-        value=150
-    )
+diet_score = st.number_input(
+    "Diet Score",
+    value=5.0
+)
 
-    diet_score = st.number_input(
-        "Diet Score",
-        value=5.0
-    )
 
-    sleep_hours_per_day = st.number_input(
-        "Sleep Hours Per Day",
-        value=8.0
-    )
 
-    family_history_diabetes = st.selectbox(
-        "Family History Diabetes",
-        [0, 1]
-    )
-
-    hypertension_history = st.selectbox(
-        "Hypertension History",
-        [0, 1]
-    )
-
-    cardiovascular_history = st.selectbox(
-        "Cardiovascular History",
-        [0, 1]
-    )
-
-    diastolic_bp = st.number_input(
-        "Diastolic BP",
-        value=80.0
-    )
-
-    glucose_fasting = st.number_input(
-        "Glucose Fasting",
-        value=90.0
-    )
-
-# ==========================
-# ENCODING
-# ==========================
 # ==========================
 # ENCODING
 # ==========================
@@ -216,25 +187,20 @@ if st.button(
 ):
 
     features = np.array([[
-        age,
-        gender,
-        smoking_status,
-        alcohol_consumption_per_week,
-        physical_activity_minutes_per_week,
-        diet_score,
-        sleep_hours_per_day,
-        family_history_diabetes,
-        hypertension_history,
-        cardiovascular_history,
-        bmi,
-        diastolic_bp,
-        heart_rate,
-        cholesterol_total,
-        glucose_fasting,
-        insulin_level,
-        hba1c,
-        diabetes_risk_score
-    ]])
+
+    age,
+    gender,
+    smoking_status,
+    bmi,
+    physical_activity_minutes_per_week,
+    family_history_diabetes,
+    cholesterol_total,
+    glucose_fasting,
+    hba1c,
+    diabetes_risk_score,
+    insulin_level,
+    diet_score
+]])
 
     prediction = model.predict(features)
 

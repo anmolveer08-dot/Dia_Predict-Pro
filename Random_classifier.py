@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import joblib
+import joblib #py -m streamlit run Dia_Pro.py
 
 from sklearn.preprocessing  import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
@@ -37,7 +37,21 @@ joblib.dump(smoking_encoder, "smoking_encoder.pkl")
 
 
 # Features and Target
-X = df.drop('diagnosed_diabetes', axis=1)
+X = df[[
+    'Age',
+    'gender',
+    'smoking_status',
+    'bmi',
+    'physical_activity_minutes_per_week',
+    'family_history_diabetes',
+    'cholesterol_total',
+    'glucose_fasting',
+    'hba1c',
+    'diabetes_risk_score',
+    'insulin_level',
+    'diet_score'
+]]
+
 y = df['diagnosed_diabetes']
 
 X_train, X_test, y_train, y_test = train_test_split(
