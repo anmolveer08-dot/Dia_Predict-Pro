@@ -23,6 +23,28 @@ print(df.info())
 print(df['diagnosed_diabetes'].value_counts())
 print(df.describe())
 
+# data visulization
+
+sns.countplot(x='diagnosed_diabetes', data=df)
+plt.title('Diabetes Distribution')
+plt.show()
+
+plt.figure(figsize=(10,8))
+sns.heatmap(df.corr(numeric_only=True), annot=True, cmap='coolwarm')
+plt.title('Correlation Heatmap')
+plt.show()
+
+sns.boxplot(x='diagnosed_diabetes', y='Age', data=df)
+plt.title('Age vs Diabetes')
+plt.show()
+
+sns.boxplot(x='diagnosed_diabetes', y='hba1c', data=df)
+plt.title('HbA1c Level vs Diabetes')
+plt.show()
+
+df.hist(figsize=(12,10))
+plt.tight_layout()
+plt.show()
 
 # Encoding
 
@@ -51,6 +73,8 @@ X = df[[
     'insulin_level',
     'diet_score'
 ]]
+
+
 
 y = df['diagnosed_diabetes']
 
@@ -81,6 +105,11 @@ joblib.dump(model, 'random_forest.pkl')
 y_pred=model.predict(X_test)
 
 
+importance = model.feature_importances_
+import joblib
+
+joblib.dump(importance,"feature_importance.pkl")
+
 #Elavute the model
 
 print("Acccuracy Train",model.score(X_train,y_train))
@@ -97,6 +126,8 @@ plt.title('Confusion Matrix')
 plt.xlabel('Predicted')
 plt.ylabel('Actual')
 plt.show()
+
+plt.savefig("confusion_matrix.png")
 
 
 #Importace feature
