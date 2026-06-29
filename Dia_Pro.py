@@ -119,7 +119,7 @@ label{
 # ==========================
 
 st.markdown(
-    f'<div class="accuracy">{'Random Forest Accuracy'} Accuracy : {92.96:.2f}%</div>',
+    f'<div class="accuracy">{'Random Forest Classification '} Accuracy : {92.96:.2f}%</div>',
     unsafe_allow_html=True
 )
 

@@ -34,7 +34,21 @@ for col in df.select_dtypes(include='object').columns:
     df[col] = le.fit_transform(df[col])
 
 # Features and Target
-X = df.drop('diagnosed_diabetes', axis=1)
+X = df[[
+    'Age',
+    'gender',
+    'smoking_status',
+    'bmi',
+    'physical_activity_minutes_per_week',
+    'family_history_diabetes',
+    'cholesterol_total',
+    'glucose_fasting',
+    'hba1c',
+    'diabetes_risk_score',
+    'insulin_level',
+    'diet_score'
+]]
+
 y = df['diagnosed_diabetes']
 
 # Train-Test Split
